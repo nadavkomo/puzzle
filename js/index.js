@@ -29,35 +29,26 @@ function Block(row, cols) {
     this.isDisplay = false; //Blank block or not: true.yes;false:no;
 
     this.div = document.createElement("div");
-    this.div.className = 'pice'
-    this.div.style.width = '33%'
-    this.div.style.height = '33%'
-    // this.div.style.width = gameConfig.pieceWidth + "px";
-    // this.div.style.height = gameConfig.pieceHeight + "px";
+    this.div.style.width = gameConfig.pieceWidth + "px";
+    this.div.style.height = gameConfig.pieceHeight + "px";
     this.div.style.background = `url("${gameConfig.imageurl}") -${this.correctCols * this.width}px -${this.correctRow * this.height}px`;
+    this.div.style.backgroundRepeat = 'no-repeat'
     this.div.style.border = "1px solid #fff";
     this.div.style['box-sizing'] = "border-box";
     this.div.style.position = "absolute";
-    
+
     this.show = function () { //Show the location of the small box
-        this.div.style.left = this.cols * 33 + "%";
-        this.div.style.top = this.row * 33 + "%";
-        // this.div.style.left = this.cols * gameConfig.pieceWidth + "px";
-        // this.div.style.top = this.row * gameConfig.pieceHeight + "px";
-        
+        this.div.style.left = this.cols * gameConfig.pieceWidth + "px";
+        this.div.style.top = this.row * gameConfig.pieceHeight + "px";
+
     }
     this.show();
-    
+
     if (row === gameConfig.row - 1 && cols === gameConfig.cols - 1) { //Last box hidden
         this.div.style.display = "none";
         this.isDisplay = true; //Blank block or not: true.yes;false:no;
     }
     gameConfig.dom.appendChild(this.div);
-    // this.img = document.createElement("img");
-    // this.img.src = `url("${gameConfig.imageurl}")`
-    // this.img.style.width = '100%'
-    // var pice = document.getElementsByClassName("pice")[0], //Game container dom
-
 
     this.isCorrect = function () { //Determine whether the row and column of the current position of the block is equal to the row and column of the correct position
         if (this.row === this.correctRow && this.cols === this.correctCols) {
@@ -206,7 +197,6 @@ function init() {
             return !item.isCorrect();
         });
         if (wrongBlocks.length === 0) { //All the squares are in the right place
-            console.log('win');
             gameConfig.isOver = true; //game over
             blocks.forEach(function (item) {
                 item.div.style.display = "block";
