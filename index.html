@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html>
 
@@ -10,7 +9,7 @@
     <!-- ZIM runs on the HTML Canvas powered by JavaScript and CreateJS http://createjs.com -->
     <!-- Founded by Inventor Dan Zen - http://danzen.com - Canadian New Media Award Winner 	-->
     <!-- ZIM is free to use. You can donate to help improve ZIM at http://zimjs.com/donate 	-->
-
+    <link rel="stylesheet" href="style/main.css">
     <script src="https://d309knd7es5f10.cloudfront.net/createjs_1.1_min.js"></script>
     <script>
         var zon = true; // set to false to turn off console messages from zim
@@ -18,7 +17,6 @@
     </script>
     <script src="https://d309knd7es5f10.cloudfront.net/zim_6.9.0.js"></script>
     <!-- use zimjs.com/distill for minified individual functions! -->
-
     <script>
         // SCALING OPTIONS
         // scaling can have values as follows with full being the default
@@ -32,10 +30,11 @@
         var height = 768;
         var countPieces = 0;
         var totalPieces = 0;
+        var size = 9;
         // as of ZIM 5.5.0 you do not need to put zim before ZIM functions and classes
         var frame = new Frame(scaling, width, height);
-        frame.on("ready", function()
-        {
+        
+        frame.on("ready", function () {
             zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
 
             var stage = frame.stage;
@@ -44,7 +43,7 @@
 
             var puzzleX;
             var puzzleY;
-            frame.outerColor = "#444";
+            // frame.outerColor = "#444";
             frame.color = "#ddd";
 
             var con = new Container
@@ -52,53 +51,55 @@
             // with chaining - can also assign to a variable for later access
             var imageObj = [];
             var piecesArrayObj = [];
-            frame.loadAssets(["brave.jpg"], "assets/");
+            frame.loadAssets(["Meme.jpg"], "assets/");
 
             var label = new Label({
-               text:"CLICK",
-               size:60,
-               font:"courier",
-               color:"orange",
-               rollColor:"red",
-               fontOptions:"italic bold"
+                text: "CLICK",
+                size: 60,
+                font: "courier",
+                color: "orange",
+                rollColor: "red",
+                fontOptions: "italic bold"
             });
             stage.addChild(label);
             label.x = label.y = 20;
-            label.on("click", function(){zog("clicking");});
+            label.on("click", function () { zog("clicking"); });
+            
 
 
-            frame.on("complete", function() {
 
 
-                imageObj = frame.asset("brave.jpg").clone();
-                imageObj.addTo(con);
+            frame.on("complete", function () {
+
+
+                imageObj = frame.asset("Meme.jpg").clone();
+                // imageObj.addTo(con);
                 imageObj.alpha = 0.2;
-
                 var piecesArray = new Array();
-                var horizontalPieces = 3;
-                var verticalPieces = 3;
+                var horizontalPieces = Math.sqrt(size);
+                var verticalPieces = Math.sqrt(size);
                 var obj = getQueryString();
                 zog(obj)
-                if(obj)
-                {
-                   horizontalPieces = obj.row;
-                   verticalPieces = obj.column;
+                if (obj) {
+                    horizontalPieces = obj.row;
+                    verticalPieces = obj.column;
                 }
                 var imageWidth = imageObj.width;
                 var imageHeight = imageObj.height;
                 var pieceWidth = Math.round(imageWidth / horizontalPieces);
                 var pieceHeight = Math.round(imageHeight / verticalPieces);
                 var gap = 40;
-                totalPieces = horizontalPieces*verticalPieces;
+                totalPieces = horizontalPieces * verticalPieces;
 
-                puzzleX = frame.width/2-imageWidth/2;
-                puzzleY = frame.height/2-imageHeight/2;
-                imageObj.pos(puzzleX,puzzleY);
-                zog(puzzleX,puzzleY);
+                puzzleX = frame.width / 2 - imageWidth / 2;
+                puzzleY = frame.height / 2 - imageHeight / 2;
+                imageObj.pos(puzzleX, puzzleY);
+                zog(puzzleX, puzzleY);
 
-                label.text = "Jigsaw Puzzle "+countPieces+"/"+totalPieces;
+                label.text = "Jigsaw Puzzle " + countPieces + "/" + totalPieces;
 
 
+                var k = 2
                 for (j = 0; j < verticalPieces; j++) {
                     piecesArrayObj[j] = [];
                     for (i = 0; i < horizontalPieces; i++) {
@@ -136,31 +137,30 @@
                         var context = s.graphics;
                         s.drag();
                         s.mouseChildren = false;
-                        s.addEventListener("pressup", function(e) {
+                        s.addEventListener("pressup", function (e) {
                             var mc = e.currentTarget;
 
                             var xx = Math.round(mc.x);
                             var yy = Math.round(mc.y);
 
-                            if (xx < puzzleX+gap / 2 && xx > puzzleX-gap / 2 && yy < puzzleX+gap / 2 && yy > puzzleY-gap / 2) {
-                                 mc.x = puzzleX;
+                            if (xx < puzzleX + gap / 2 && xx > puzzleX - gap / 2 && yy < puzzleX + gap / 2 && yy > puzzleY - gap / 2) {
+                                mc.x = puzzleX;
                                 mc.y = puzzleY;
                                 mc.noDrag();
-                                mc.addTo(mc.parent,0);
+                                mc.addTo(mc.parent, 0);
                                 mc.mouseChildren = false;
                                 mc.mouseEnabled = false;
                                 mc.hint.visible = false;
                                 countPieces++;
-                                label.text = "Jigsaw Puzzle "+countPieces+"/"+totalPieces;
-                                zog("countPieces",countPieces);
-                                if(countPieces == totalPieces)
-                                {
+                                label.text = "Jigsaw Puzzle " + countPieces + "/" + totalPieces;
+                                zog("countPieces", countPieces);
+                                if (countPieces == totalPieces) {
                                     console.log('win');
-                                    var pane = new Pane({width:600,label:"VERY NICE!", height:250, modal:false, displayClose:false});
+                                    var pane = new Pane({ width: 600, label: "VERY NICE!", height: 250, modal: false, displayClose: false });
 
-                                    var confirm = new Button(120, 50, "ON", "green").center(pane).mov(0,70);
+                                    var confirm = new Button(120, 50, "ON", "green").center(pane).mov(0, 70);
 
-                                    confirm.on("click", function() {
+                                    confirm.on("click", function () {
                                         pane.hide();
                                         window.location.replace(window.location.pathname + window.location.search + window.location.hash);
 
@@ -172,7 +172,7 @@
                             }
 
                         });
-                        context.setStrokeStyle(3,"round");
+                        context.setStrokeStyle(3, "round");
                         var commandi1 = context.beginStroke(createjs.Graphics.getRGB(0, 0, 0)).command;
                         //
                         var commandi = context.beginBitmapFill(imageObj.image).command;
@@ -181,49 +181,47 @@
                         context.moveTo(offsetX, offsetY);
 
 
-
-
                         if (j != 0) {
                             context.lineTo(offsetX + 3 * x8, offsetY);
                             if (tileObj.up == 1) {
-                                context.curveTo(offsetX + 2 * x8, offsetY - 2 * y8, offsetX + 4 * x8, offsetY - 2 * y8);
-                                context.curveTo(offsetX + 6 * x8, offsetY - 2 * y8, offsetX + 5 * x8, offsetY);
+                                // context.curveTo(offsetX + 2 * x8, offsetY - 2 * y8, offsetX + 4 * x8, offsetY - 2 * y8);
+                                // context.curveTo(offsetX + 6 * x8, offsetY - 2 * y8, offsetX + 5 * x8, offsetY);
                             } else {
-                                context.curveTo(offsetX + 2 * x8, offsetY + 2 * y8, offsetX + 4 * x8, offsetY + 2 * y8);
-                                context.curveTo(offsetX + 6 * x8, offsetY + 2 * y8, offsetX + 5 * x8, offsetY);
+                                // context.curveTo(offsetX + 2 * x8, offsetY + 2 * y8, offsetX + 4 * x8, offsetY + 2 * y8);
+                                // context.curveTo(offsetX + 6 * x8, offsetY + 2 * y8, offsetX + 5 * x8, offsetY);
                             }
                         }
                         context.lineTo(offsetX + 8 * x8, offsetY);
                         if (i != horizontalPieces - 1) {
                             context.lineTo(offsetX + 8 * x8, offsetY + 3 * y8);
                             if (tileObj.right == 1) {
-                                context.curveTo(offsetX + 10 * x8, offsetY + 2 * y8, offsetX + 10 * x8, offsetY + 4 * y8);
-                                context.curveTo(offsetX + 10 * x8, offsetY + 6 * y8, offsetX + 8 * x8, offsetY + 5 * y8);
+                                // context.curveTo(offsetX + 10 * x8, offsetY + 2 * y8, offsetX + 10 * x8, offsetY + 4 * y8);
+                                // context.curveTo(offsetX + 10 * x8, offsetY + 6 * y8, offsetX + 8 * x8, offsetY + 5 * y8);
                             } else {
-                                context.curveTo(offsetX + 6 * x8, offsetY + 2 * y8, offsetX + 6 * x8, offsetY + 4 * y8);
-                                context.curveTo(offsetX + 6 * x8, offsetY + 6 * y8, offsetX + 8 * x8, offsetY + 5 * y8);
+                                // context.curveTo(offsetX + 6 * x8, offsetY + 2 * y8, offsetX + 6 * x8, offsetY + 4 * y8);
+                                // context.curveTo(offsetX + 6 * x8, offsetY + 6 * y8, offsetX + 8 * x8, offsetY + 5 * y8);
                             }
                         }
                         context.lineTo(offsetX + 8 * x8, offsetY + 8 * y8);
                         if (j != verticalPieces - 1) {
                             context.lineTo(offsetX + 5 * x8, offsetY + 8 * y8);
                             if (tileObj.down == 1) {
-                                context.curveTo(offsetX + 6 * x8, offsetY + 10 * y8, offsetX + 4 * x8, offsetY + 10 * y8);
-                                context.curveTo(offsetX + 2 * x8, offsetY + 10 * y8, offsetX + 3 * x8, offsetY + 8 * y8);
+                                // context.curveTo(offsetX + 6 * x8, offsetY + 10 * y8, offsetX + 4 * x8, offsetY + 10 * y8);
+                                // context.curveTo(offsetX + 2 * x8, offsetY + 10 * y8, offsetX + 3 * x8, offsetY + 8 * y8);
                             } else {
-                                context.curveTo(offsetX + 6 * x8, offsetY + 6 * y8, offsetX + 4 * x8, offsetY + 6 * y8);
-                                context.curveTo(offsetX + 2 * x8, offsetY + 6 * y8, offsetX + 3 * x8, offsetY + 8 * y8);
+                                // context.curveTo(offsetX + 6 * x8, offsetY + 6 * y8, offsetX + 4 * x8, offsetY + 6 * y8);
+                                // context.curveTo(offsetX + 2 * x8, offsetY + 6 * y8, offsetX + 3 * x8, offsetY + 8 * y8);
                             }
                         }
                         context.lineTo(offsetX, offsetY + 8 * y8);
                         if (i != 0) {
                             context.lineTo(offsetX, offsetY + 5 * y8);
                             if (tileObj.left == 1) {
-                                context.curveTo(offsetX - 2 * x8, offsetY + 6 * y8, offsetX - 2 * x8, offsetY + 4 * y8);
-                                context.curveTo(offsetX - 2 * x8, offsetY + 2 * y8, offsetX, offsetY + 3 * y8);
+                                // context.curveTo(offsetX - 2 * x8, offsetY + 6 * y8, offsetX - 2 * x8, offsetY + 4 * y8);
+                                // context.curveTo(offsetX - 2 * x8, offsetY + 2 * y8, offsetX, offsetY + 3 * y8);
                             } else {
-                                context.curveTo(offsetX + 2 * x8, offsetY + 6 * y8, offsetX + 2 * x8, offsetY + 4 * y8);
-                                context.curveTo(offsetX + 2 * x8, offsetY + 2 * y8, offsetX, offsetY + 3 * y8);
+                                // context.curveTo(offsetX + 2 * x8, offsetY + 6 * y8, offsetX + 2 * x8, offsetY + 4 * y8);
+                                // context.curveTo(offsetX + 2 * x8, offsetY + 2 * y8, offsetX, offsetY + 3 * y8);
                             }
                         }
                         context.lineTo(offsetX, offsetY);
@@ -237,15 +235,16 @@
                         hint.mouseEnabled = false;
                         s.hint = hint;
                         hint.graphics = context.clone(true);
-                        hint.pos(puzzleX,puzzleY);
-                       // newGra.graphics = newGra;
+                        hint.pos(puzzleX, puzzleY);
+                        // newGra.graphics = newGra;
                         hint.graphics._fill = fill;
                         hint.graphics._fill.style = null;
-
-                        hint.addTo(con,0);
-                        //s.animate({obj:{x:frame.width-offsetX-pieceWidth,y:frame.height-offsetY-pieceHeight}, time:700});
-                        //s.animate({obj:{x:-offsetX,y:-offsetY}, time:700});
-                        s.animate({obj:{x:rand(-offsetX,frame.width-offsetX-pieceWidth),y:rand(-offsetY,frame.height-offsetY-pieceHeight)}, time:700});
+                        // var num = 10;
+                        hint.addTo(con, 0);
+                        s.animate({ obj: { x: frame.width - offsetX - pieceWidth - 10, y: frame.height - offsetY - pieceHeight - (k * 50) }, time: 700 });
+                        k++;
+                        // s.animate({obj:{x:-offsetX,y:-offsetY}, time:700});
+                        // s.animate({ obj: { x: rand(-offsetX, frame.width - offsetX - pieceWidth), y: rand(-offsetY, frame.height - offsetY - pieceHeight) }, time: 700 });
 
                     }
                 }
@@ -263,7 +262,10 @@
 
             stage.update(); // this is needed to show any changes
 
+
         }); // end of ready
+    </script>
+    <script>
     </script>
 
     <meta name="viewport" content="width=device-width, user-scalable=no" />
@@ -272,6 +274,9 @@
 
 <body>
     <!-- canvas with id="myCanvas" is made by zim Frame -->
+    <div class="container">
+        
+    </div>
 </body>
 
 </html>

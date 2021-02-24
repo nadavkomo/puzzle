@@ -1,6 +1,14 @@
-.clearfix {
+/* #myCanvas {
+    text-align: center;
+    width: 500px !important;
+    height: 500px !important;
+    /* position: static !important; */
+    /* top: 150px !important;
+    left: 10% !important */
+/* }  */
+
+/* .container {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
     justify-content: center;
-}
+    align-items: center;
+} */
